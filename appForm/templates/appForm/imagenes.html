@@ -5,6 +5,30 @@
     <title>Title</title>
 </head>
 <body>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %} <!--Es necesario para los envios POST, pues le indica a django que la información es segura-->
+        {{ form }}
+        </br>
+        <input type="submit" value="Subir Imagen"/>
+        </br>
+
+    </form>
+
+    {% if image_objects %}
+        <h3>Galería de imágenes:</h3>
+        <div>
+            {% for image_obj in image_objects %} <!--Recorra todas las imágenes de la BD-->
+                <div style="display: inline-block; margin: 10px;">
+                    <img src="{{ image_obj.image.url }}" style="max-width: 200px; max-height: 200px;"> <!-- utilizo la variable del for para indicar la url de las imágenes-->
+                    <form method="post" action="{% url 'borrarImg' image_obj.id %}"> <!--Para la eliminación del formulario, necesito uno interno-->
+                        {% csrf_token %}
+                        <button type="submit">Borrar</button>
+                    </form>
+                    <p>Ruta de la imagen: {{ image_obj.image.url }}</p>  <!-- Agrega esta línea para depurar -->
+                </div>
+            {% endfor %}
+        </div>
+    {%endif%}
 
 </body>
 </html>
